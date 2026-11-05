@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis XV Años - Berenice García</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Tailwind Colors Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'pastel-yellow': '#F8F8AC',
+                        'cream-nude': '#F7ECE0',
+                        'light-lavender': '#E6CEFF',
+                        'medium-lilac': '#C989DD',
+                        'deep-purple': '#A662BD',
+                        'accent-gold': '#D4AF37',
+                    },
+                    fontFamily: {
+                        'cursive': ['"Great Vibes"', 'cursive'],
+                        'serif-title': ['"Playfair Display"', 'serif'],
+                        'classic': ['"Cinzel"', 'serif'],
+                        'body': ['"Montserrat"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Animation Keyframes */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1.5deg); }
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(201, 137, 221, 0.4), 0 0 30px rgba(212, 175, 55, 0.2); }
+            50% { box-shadow: 0 0 25px rgba(201, 137, 221, 0.8), 0 0 45px rgba(212, 175, 55, 0.5); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .glow-effect {
+            animation: pulseGlow 3s infinite;
+        }
+
+        .gold-shimmer-text {
+            background: linear-gradient(90deg, #BA7CC6 0%, #D4AF37 30%, #FFF5D0 50%, #D4AF37 70%, #BA7CC6 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 4s linear infinite;
+        }
+
+        /* Canvas background overlay */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F7ECE0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #C989DD;
+            border-radius: 4px;
+        }
+
+        .page-view {
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+
+        .envelope-flap {
+            clip-path: polygon(0 0, 50% 50%, 100% 0);
+            transform-origin: top;
+            transition: transform 0.8s ease;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(226, 195, 255, 0.6);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#FDF9F2] via-[#F7ECE0] to-[#E2C3FF] font-body text-gray-800 min-h-screen overflow-x-hidden relative selection:bg-medium-lilac selection:text-white">
+
+    <!-- Pantalla inicial: el visitante debe tocar Entrar para abrir la invitación y habilitar el audio -->
+    <div id="entry-screen" class="fixed inset-0 z-[100] flex items-center justify-center p-6 text-center"
+         style="background: radial-gradient(circle at top, #FDF9F2 0%, #E6CEFF 55%, #A662BD 100%);">
+        <div class="w-full max-w-md rounded-3xl border border-white/70 bg-white/80 p-8 shadow-2xl backdrop-blur-md">
+            <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#E6CEFF] text-[#A662BD] shadow">
+                <i class="fas fa-envelope-open-text text-2xl"></i>
+            </div>
+            <p class="mb-2 text-xs font-bold uppercase tracking-[0.3em] text-[#A662BD]">Una invitación especial</p>
+            <h1 class="mb-2 text-5xl text-[#A662BD]" style="font-family: 'Great Vibes', cursive;">Berenice García</h1>
+            <p class="mb-7 text-sm font-semibold text-gray-700" style="font-family: 'Playfair Display', serif;">Te invita a celebrar sus XV años</p>
+            <button type="button" onclick="enterInvitation()"
+                class="inline-flex items-center justify-center gap-3 rounded-full border border-white/60 bg-gradient-to-r from-[#C989DD] to-[#A662BD] px-10 py-4 text-sm font-bold tracking-widest text-white shadow-xl transition hover:scale-105 active:scale-95">
+                <i class="fas fa-door-open"></i>
+                ENTRAR
+            </button>
+            <p class="mt-4 text-xs text-[#704080]">Presiona para abrir la invitación y escuchar la música</p>
+        </div>
+    </div>
+
+
+    <!-- Particle Background Canvas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Reproductor de música MP3 local -->
+    <div id="audio-berenice" class="audio-berenice" aria-label="Música de la invitación">
+        <audio id="bg-music" controls loop playsinline preload="auto">
+            <source src="musica-berenice.mp3" type="audio/mpeg">
+            Tu navegador no puede reproducir este archivo de audio.
+        </audio>
+    </div>
+    <style>
+        .audio-berenice {
+            position: fixed;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 60;
+            width: calc(100% - 24px);
+            max-width: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(255,255,255,.94);
+            box-shadow: 0 4px 18px rgba(70,30,90,.18);
+        }
+        .audio-berenice audio {
+            display: block;
+            width: 100%;
+            height: 40px;
+        }
+    </style>
+
+    <!-- Main App Container -->
+    <div id="app" class="relative z-20 min-h-screen w-full flex flex-col items-center justify-center p-3 md:p-6">
+
+        <!-- ================= PAGE 1: ENVELOPE / INTRO VIEW ================= -->
+        <section id="page-1" class="page-view w-full max-w-lg mx-auto flex flex-col items-center justify-center min-h-[90vh] py-6">
+            
+            <!-- Header Title Frame -->
+            <div class="text-center mb-5 animate-float">
+                <div class="inline-block p-2.5 rounded-full bg-white/70 backdrop-blur-sm border border-medium-lilac/40 shadow-sm mb-2">
+                    <svg class="w-8 h-8 text-deep-purple mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                </div>
+                <h2 class="font-classic text-xs md:text-sm tracking-[0.3em] text-deep-purple uppercase font-bold">Mis XV Años</h2>
+                <h1 class="font-cursive text-5xl md:text-6xl gold-shimmer-text my-1 py-1">Berenice García</h1>
+                <p class="font-serif-title italic text-gray-700 text-xs md:text-sm font-semibold">Sábado, 5 de Diciembre • 2:30 PM</p>
+            </div>
+
+            <!-- Verse Preview Card -->
+            <div class="w-full bg-white/80 backdrop-blur-md p-4 md:p-5 rounded-2xl border border-medium-lilac/40 shadow-md mb-6 text-center">
+                <i class="fas fa-bible text-deep-purple text-xl mb-1"></i>
+                <p class="font-serif-title italic text-gray-700 text-xs md:text-sm leading-relaxed">
+                    "Hoy dejo atrás mi niñez para dar paso a la juventud, y con la gracia de Dios quiero vivir como dice su palabra: <br>
+                    <span class="font-semibold text-deep-purple">'Nadie tenga en poco tu juventud; al contrario sé ejemplo para los creyentes en la palabra, conducta, amor, fe y pureza'</span>"
+                </p>
+                <span class="block mt-2 text-[11px] font-bold text-accent-gold tracking-widest uppercase">— 1 Timoteo 4:12</span>
+            </div>
+
+            <!-- Envelope Container -->
+            <div class="relative w-full max-w-sm aspect-[4/3] my-2 cursor-pointer group" onclick="openInvitation()">
+                
+                <!-- Envelope Base -->
+                <div class="absolute inset-0 bg-gradient-to-b from-medium-lilac to-deep-purple rounded-2xl shadow-2xl overflow-hidden border-2 border-white/50">
+                    
+                    <!-- Card inside envelope preview -->
+                    <div id="envelope-letter" class="absolute inset-x-4 top-4 bottom-4 bg-[#FFFDF9] rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-inner transition-transform duration-700 transform translate-y-2">
+                        <p class="font-classic text-xs text-medium-lilac font-bold tracking-widest uppercase">Invitación Exclusiva</p>
+                        <p class="font-cursive text-3xl text-deep-purple my-1">Berenice García</p>
+                        <p class="text-[11px] text-gray-700 font-bold uppercase">SÁBADO 5 DE DICIEMBRE • 2:30 PM</p>
+                        <p class="text-[10px] text-gray-500 font-medium">Iglesia Josué de las Asambleas de Dios, Cojutepeque</p>
+                    </div>
+
+                    <!-- Left & Right Pocket Flaps -->
+                    <div class="absolute inset-0 pointer-events-none">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-[#B06DC4] to-[#C989DD] opacity-90" style="clip-path: polygon(0 0, 0 100%, 50% 50%);"></div>
+                        <div class="absolute inset-0 bg-gradient-to-tl from-[#9B51B0] to-[#BA7CC6] opacity-90" style="clip-path: polygon(100% 0, 100% 100%, 50% 50%);"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#8E41A5] to-[#A662BD]" style="clip-path: polygon(0 100%, 100% 100%, 50% 45%);"></div>
+                    </div>
+                </div>
+
+                <!-- Envelope Top Flap -->
+                <div id="envelope-top-flap" class="envelope-flap absolute top-0 inset-x-0 h-1/2 bg-gradient-to-b from-[#D498E8] to-[#BA7CC6] rounded-t-2xl border-t border-white/60 z-20 shadow-md"></div>
+
+                <!-- Wax Seal Stamp -->
+                <div id="wax-seal" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 transition-transform duration-500 group-hover:scale-110">
+                    <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#FFF1B0] to-[#997B15] p-[2px] shadow-xl flex items-center justify-center glow-effect">
+                        <div class="w-full h-full rounded-full bg-gradient-to-br from-[#E6BE44] to-[#A37B12] flex flex-col items-center justify-center text-white border border-yellow-200">
+                            <span class="font-serif-title font-bold text-xs tracking-tighter">XV</span>
+                            <span class="font-cursive text-xs -mt-1">BG</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Prompt Button -->
+            <div class="mt-5 text-center">
+                <button onclick="openInvitation()" class="group relative inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-gradient-to-r from-medium-lilac via-deep-purple to-medium-lilac text-white font-semibold text-sm tracking-wide shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 border border-white/40">
+                    <i class="fas fa-envelope-open text-pastel-yellow group-hover:rotate-12 transition-transform"></i>
+                    <span>TOCA PARA ABRIR INVITACIÓN</span>
+                    <i class="fas fa-sparkles text-pastel-yellow animate-pulse"></i>
+                </button>
+                <p class="text-xs text-deep-purple/90 mt-3 font-semibold flex items-center justify-center gap-1.5">
+                    <i class="fas fa-music text-xs"></i> Canción: "No crezcas más" - Tercer Cielo
+                </p>
+            </div>
+
+            <div class="mt-6 text-center text-xs text-gray-600 font-classic font-semibold">
+                <span>BERENICE GARCÍA • 2026</span>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: FULL INVITATION DETAILS VIEW ================= -->
+        <section id="page-2" class="page-view hidden opacity-0 translate-y-8 w-full max-w-2xl mx-auto my-4 pb-12">
+            
+            <!-- Top Navigation Bar -->
+            <div class="flex items-center justify-between mb-6 px-2">
+                <button onclick="showEnvelopeView()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-md border border-medium-lilac/40 text-deep-purple text-xs font-bold shadow-sm hover:bg-white transition-all">
+                    <i class="fas fa-arrow-left"></i> Volver al Sobre
+                </button>
+                <span class="font-classic text-xs font-bold tracking-widest text-deep-purple">MIS XV AÑOS</span>
+            </div>
+
+            <!-- Main Card Container -->
+            <div class="glass-card rounded-3xl p-6 md:p-10 shadow-2xl border border-white/90 relative overflow-hidden">
+                
+                <!-- Header & Name -->
+                <div class="text-center relative z-10">
+                    <p class="font-classic text-xs tracking-[0.25em] text-deep-purple uppercase font-bold mb-2">Con la bendición de Dios y mis padres</p>
+                    <h1 class="font-cursive text-5xl md:text-7xl gold-shimmer-text py-2">Berenice García</h1>
+                    <div class="w-28 h-0.5 bg-gradient-to-r from-transparent via-accent-gold to-transparent mx-auto my-3"></div>
+                </div>
+
+                <!-- Verse Section -->
+                <div class="my-6 text-center px-5 py-6 rounded-2xl bg-white/70 border border-light-lavender/70 shadow-inner">
+                    <i class="fas fa-bible text-deep-purple text-2xl mb-2 block"></i>
+                    <p class="font-serif-title italic text-gray-800 text-sm md:text-base leading-relaxed">
+                        "Hoy dejo atrás mi niñez para dar paso a la juventud, y con la gracia de Dios quiero vivir como dice su palabra: <br>
+                        <span class="font-semibold text-deep-purple">'Nadie tenga en poco tu juventud; al contrario sé ejemplo para los creyentes en la palabra, conducta, amor, fe y pureza'</span>"
+                    </p>
+                    <span class="block mt-3 text-xs font-bold text-accent-gold uppercase tracking-wider">— 1 Timoteo 4:12</span>
+                </div>
+
+                <!-- Parents & Godparents Section -->
+                <div class="my-6 space-y-4">
+                    
+                    <!-- Parents -->
+                    <div class="p-4 rounded-xl bg-white/60 border border-medium-lilac/30 text-center shadow-sm">
+                        <h3 class="font-classic text-xs font-bold text-deep-purple uppercase tracking-widest mb-2"><i class="fas fa-heart text-xs text-medium-lilac mr-1"></i> Mis Padres</h3>
+                        <div class="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-6 text-sm font-semibold text-gray-800">
+                            <p>Armando López</p>
+                            <span class="hidden sm:inline text-medium-lilac">•</span>
+                            <p>Ana García</p>
+                        </div>
+                    </div>
+
+                    <!-- Godparents List Grid (All Bold Black Text, No Borders) -->
+                    <div class="p-5 rounded-2xl bg-white/60 border border-medium-lilac/30 text-center shadow-sm">
+                        <h3 class="font-classic text-xs font-bold text-deep-purple uppercase tracking-widest mb-3"><i class="fas fa-hands-holding-child text-xs text-medium-lilac mr-1"></i> Mis Padrinos</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs font-bold text-black">
+                            <div class="p-2.5 bg-white/80 rounded-lg shadow-sm">Carina y Mario Romero</div>
+                            <div class="p-2.5 bg-white/80 rounded-lg shadow-sm">Roxana Pichinte</div>
+                            <div class="p-2.5 bg-white/80 rounded-lg shadow-sm">Armando y Elena García</div>
+                            <div class="p-2.5 bg-white/80 rounded-lg shadow-sm">Madai Munguía</div>
+                            <div class="p-2.5 bg-white/80 rounded-lg shadow-sm">Salvadora Valdivia</div>
+                            <div class="p-2.5 bg-white/80 rounded-lg shadow-sm">Jorge e Iris Tejada</div>
+                            <div class="p-2.5 bg-white/80 rounded-lg shadow-sm">Gabriela Aragón</div>
+                            <div class="p-2.5 bg-white/80 rounded-lg shadow-sm">Mildred Vargas</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Countdown Timer -->
+                <div class="my-8 text-center bg-gradient-to-r from-deep-purple via-medium-lilac to-deep-purple text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                    <h3 class="font-classic text-xs tracking-widest uppercase text-pastel-yellow mb-4 font-semibold">Faltan Muy Pocos Días</h3>
+                    
+                    <div class="grid grid-cols-4 gap-2 md:gap-4 max-w-sm mx-auto">
+                        <div class="bg-white/20 backdrop-blur-sm p-2 md:p-3 rounded-xl border border-white/20">
+                            <span id="timer-days" class="font-bold text-2xl md:text-3xl block">00</span>
+                            <span class="text-[10px] md:text-xs tracking-wider uppercase">Días</span>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-sm p-2 md:p-3 rounded-xl border border-white/20">
+                            <span id="timer-hours" class="font-bold text-2xl md:text-3xl block">00</span>
+                            <span class="text-[10px] md:text-xs tracking-wider uppercase">Horas</span>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-sm p-2 md:p-3 rounded-xl border border-white/20">
+                            <span id="timer-minutes" class="font-bold text-2xl md:text-3xl block">00</span>
+                            <span class="text-[10px] md:text-xs tracking-wider uppercase">Min</span>
+                        </div>
+                        <div class="bg-white/20 backdrop-blur-sm p-2 md:p-3 rounded-xl border border-white/20">
+                            <span id="timer-seconds" class="font-bold text-2xl md:text-3xl block">00</span>
+                            <span class="text-[10px] md:text-xs tracking-wider uppercase">Seg</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date & Exact Location Section -->
+                <div class="my-8">
+                    <div class="text-center mb-5">
+                        <h2 class="font-classic text-lg font-bold text-deep-purple tracking-widest uppercase">Fecha y Ubicación</h2>
+                        <p class="text-xs text-gray-600 font-medium">Misma ubicación para la ceremonia y recepción</p>
+                    </div>
+
+                    <div class="bg-white/90 p-6 rounded-2xl border border-medium-lilac/40 shadow-md text-center max-w-md mx-auto">
+                        <div class="w-14 h-14 mx-auto rounded-full bg-light-lavender/60 flex items-center justify-center text-deep-purple mb-3">
+                            <i class="fas fa-church text-2xl"></i>
+                        </div>
+                        
+                        <h3 class="font-serif-title font-bold text-xl text-gray-800">Iglesia Josué de las Asambleas de Dios</h3>
+                        <p class="text-xs text-deep-purple font-bold uppercase mt-1"><i class="fas fa-location-dot mr-1"></i> Cojutepeque</p>
+                        
+                        <hr class="my-4 border-gray-200 w-1/2 mx-auto">
+                        
+                        <p class="text-base font-bold text-gray-800"><i class="far fa-calendar-alt text-deep-purple mr-1"></i> Sábado, 5 de Diciembre de 2026</p>
+                        <p class="text-sm font-semibold text-deep-purple mt-1"><i class="far fa-clock mr-1"></i> 2:30 PM</p>
+                        
+                        <div class="mt-5">
+                            <a href="https://maps.google.com/?q=Iglesia+Josue+Asambleas+de+Dios+Cojutepeque" target="_blank" rel="noopener" class="inline-flex items-center justify-center gap-2 text-xs font-bold text-white bg-gradient-to-r from-deep-purple to-medium-lilac py-3 px-6 rounded-xl shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all">
+                                <i class="fas fa-map-location-dot text-sm"></i> Abrir Ruta en Google Maps
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dress Code & Gifts Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+                    
+                    <!-- Dress Code -->
+                    <div class="p-5 rounded-2xl bg-white/80 border border-light-lavender/60 text-center flex items-center gap-4 shadow-sm">
+                        <div class="w-12 h-12 rounded-full bg-deep-purple/10 flex items-center justify-center text-deep-purple shrink-0">
+                            <i class="fas fa-user-tie text-xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-classic text-xs font-bold text-deep-purple uppercase">Código de Vestimenta</h4>
+                            <p class="text-sm font-bold text-gray-800">Elegante</p>
+                            <p class="text-xs text-deep-purple font-semibold mt-0.5">Nota: El color morado / lila está reservado exclusivamente para la quinceañera.</p>
+                        </div>
+                    </div>
+
+                    <!-- Gift Envelope -->
+                    <div class="p-5 rounded-2xl bg-white/80 border border-light-lavender/60 text-center flex items-center gap-4 shadow-sm">
+                        <div class="w-12 h-12 rounded-full bg-accent-gold/20 flex items-center justify-center text-accent-gold shrink-0">
+                            <i class="fas fa-envelope-open-text text-xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-classic text-xs font-bold text-deep-purple uppercase">Sugerencia de Regalo</h4>
+                            <p class="text-sm font-bold text-gray-800">Lluvia de Sobres</p>
+                            <p class="text-xs text-gray-600 font-medium mt-0.5">Tu presencia es mi mejor regalo. Contaremos con buzón especial.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RSVP Section with Deadline & WhatsApp -->
+                <div class="my-8 p-6 md:p-8 rounded-3xl bg-gradient-to-br from-white to-cream-nude/80 border border-medium-lilac/40 shadow-xl relative">
+                    
+                    <!-- Highlighted RSVP Deadline Banner -->
+                    <div class="mb-5 p-3 rounded-2xl bg-amber-100/90 border border-amber-300 text-amber-900 text-center shadow-sm">
+                        <i class="fas fa-calendar-check text-amber-700 mr-1.5"></i>
+                        <span class="text-xs md:text-sm font-bold uppercase tracking-wider">Fecha límite de confirmación:</span>
+                        <p class="text-sm font-extrabold text-deep-purple mt-0.5">Por favor confirmar antes del 20 de Noviembre</p>
+                    </div>
+
+                    <div class="text-center mb-6">
+                        <h3 class="font-serif-title text-2xl font-bold text-gray-800">Confirmación de Asistencia</h3>
+                        <p class="text-xs text-gray-600 font-semibold mt-1">Teléfono de contacto: <span class="text-deep-purple font-bold">7877-6420</span></p>
+                    </div>
+
+                    <!-- Direct WhatsApp Button -->
+                    <div class="mb-6 text-center">
+                        <a href="https://wa.me/50378776420?text=Hola%20Berenice,%20confirmo%20mi%20asistencia%20para%20celebrar%20tus%2015%20A%C3%B1os%20el%205%20de%20Diciembre." target="_blank" rel="noopener" class="w-full inline-flex items-center justify-center gap-3 py-3.5 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                            <span>Confirmar Directo por WhatsApp (7877-6420)</span>
+                        </a>
+                    </div>
+
+                    <div class="relative flex py-2 items-center mb-4">
+                        <div class="flex-grow border-t border-gray-300"></div>
+                        <span class="flex-shrink mx-4 text-xs font-bold text-gray-400 uppercase">o envía tu mensaje aquí</span>
+                        <div class="flex-grow border-t border-gray-300"></div>
+                    </div>
+
+                    <!-- Interactive Form without Passes Field -->
+                    <form id="rsvp-form" onsubmit="handleRSVPSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Nombre Completo *</label>
+                            <input id="rsvp-name" type="text" required placeholder="Ej. Familia López" class="w-full px-4 py-3 rounded-xl bg-white border border-gray-300 focus:border-medium-lilac focus:ring-2 focus:ring-medium-lilac/30 outline-none transition-all text-sm font-medium">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">¿Asistirás? *</label>
+                            <select id="rsvp-attendance" required class="w-full px-4 py-3 rounded-xl bg-white border border-gray-300 focus:border-medium-lilac focus:ring-2 focus:ring-medium-lilac/30 outline-none transition-all text-sm font-medium">
+                                <option value="" disabled selected>Selecciona una opción</option>
+                                <option value="Si, asistiré">¡Sí, asistiré con mucho gusto!</option>
+                                <option value="No podre asistir">Lo siento, no podré asistir</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Mensaje para Berenice</label>
+                            <textarea id="rsvp-message" rows="3" placeholder="Escribe tus felicitaciones para la quinceañera..." class="w-full px-4 py-3 rounded-xl bg-white border border-gray-300 focus:border-medium-lilac focus:ring-2 focus:ring-medium-lilac/30 outline-none transition-all text-sm font-medium resize-none"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-medium-lilac via-deep-purple to-medium-lilac text-white font-bold text-sm shadow-lg hover:shadow-xl hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2">
+                            <i class="fas fa-paper-plane"></i>
+                            <span>Enviar Confirmación a WhatsApp</span>
+                        </button>
+                    </form>
+
+                    <!-- Success Message Container -->
+                    <div id="rsvp-success" class="hidden text-center py-8">
+                        <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h4 class="font-serif-title text-xl font-bold text-gray-800">¡Confirmación Registrada!</h4>
+                        <p class="text-sm text-gray-600 mt-1">Gracias por confirmar. Esperamos celebrar juntos este gran día.</p>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="text-center pt-6 border-t border-medium-lilac/30">
+                    <p class="font-cursive text-4xl text-deep-purple">¡Te Esperamos!</p>
+                    <p class="font-classic text-xs text-gray-500 tracking-widest mt-1">BERENICE GARCÍA • 15 AÑOS</p>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        let isAudioPlaying = false;
+        const bgMusic = document.getElementById('bg-music');
+
+        function enterInvitation() {
+            const entryScreen = document.getElementById('entry-screen');
+            if (entryScreen) {
+                entryScreen.style.transition = 'opacity 0.5s ease';
+                entryScreen.style.opacity = '0';
+                setTimeout(() => entryScreen.remove(), 500);
+            }
+
+            // La reproducción se inicia directamente desde el clic del botón ENTRAR.
+            playAudio();
+        }
+
+        function playAudio() {
+            if (!bgMusic || isAudioPlaying) return;
+
+            const playAttempt = bgMusic.play();
+            if (playAttempt && typeof playAttempt.then === 'function') {
+                playAttempt.then(() => {
+                    isAudioPlaying = true;
+                }).catch(() => {
+                    // Si el navegador bloquea el inicio automático, el visitante
+                    // puede iniciar la música con el control visible del reproductor.
+                    isAudioPlaying = false;
+                });
+            }
+        }
+
+        function enableAudioOnTouch() {
+            playAudio();
+        }
+
+        function openInvitation() {
+            enableAudioOnTouch();
+
+            const flap = document.getElementById('envelope-top-flap');
+            const seal = document.getElementById('wax-seal');
+            const letter = document.getElementById('envelope-letter');
+
+            if (flap) flap.style.transform = 'rotateX(180deg)';
+            if (seal) {
+                seal.style.opacity = '0';
+                seal.style.transform = 'scale(0.5)';
+            }
+            if (letter) {
+                setTimeout(() => {
+                    letter.style.transform = 'translateY(-60px) scale(1.05)';
+                }, 300);
+            }
+
+            setTimeout(() => {
+                const page1 = document.getElementById('page-1');
+                const page2 = document.getElementById('page-2');
+
+                if (page1) {
+                    page1.style.opacity = '0';
+                    page1.style.transform = 'scale(0.95)';
+                }
+
+                setTimeout(() => {
+                    if (page1) page1.classList.add('hidden');
+                    if (page2) {
+                        page2.classList.remove('hidden');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                        setTimeout(() => {
+                            page2.classList.remove('opacity-0', 'translate-y-8');
+                            page2.classList.add('opacity-100', 'translate-y-0');
+                        }, 50);
+                    }
+                }, 500);
+            }, 900);
+        }
+
+        function showEnvelopeView() {
+            const page1 = document.getElementById('page-1');
+            const page2 = document.getElementById('page-2');
+            const flap = document.getElementById('envelope-top-flap');
+            const seal = document.getElementById('wax-seal');
+            const letter = document.getElementById('envelope-letter');
+
+            if (page2) page2.classList.add('opacity-0', 'translate-y-8');
+            
+            setTimeout(() => {
+                if (page2) page2.classList.add('hidden');
+                if (page1) page1.classList.remove('hidden');
+                
+                if (flap) flap.style.transform = 'rotateX(0deg)';
+                if (seal) {
+                    seal.style.opacity = '1';
+                    seal.style.transform = 'translate(-50%, -50%) scale(1)';
+                }
+                if (letter) letter.style.transform = 'translateY(8px)';
+
+                if (page1) {
+                    setTimeout(() => {
+                        page1.style.opacity = '1';
+                        page1.style.transform = 'scale(1)';
+                    }, 50);
+                }
+            }, 500);
+        }
+
+        // Countdown target (Dec 5, 2026, 2:30 PM)
+        const targetDate = new Date("December 5, 2026 14:30:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById("timer-days").innerText = String(days).padStart(2, '0');
+                document.getElementById("timer-hours").innerText = String(hours).padStart(2, '0');
+                document.getElementById("timer-minutes").innerText = String(minutes).padStart(2, '0');
+                document.getElementById("timer-seconds").innerText = String(seconds).padStart(2, '0');
+            } else {
+                document.getElementById("timer-days").innerText = "00";
+                document.getElementById("timer-hours").innerText = "00";
+                document.getElementById("timer-minutes").innerText = "00";
+                document.getElementById("timer-seconds").innerText = "00";
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // RSVP Form submit without passes
+        function handleRSVPSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('rsvp-name').value;
+            const attendance = document.getElementById('rsvp-attendance').value;
+            const message = document.getElementById('rsvp-message').value;
+
+            const text = `Hola Berenice! Confirmación para tus 15 Años:%0A- Nombre: ${encodeURIComponent(name)}%0A- Asistencia: ${encodeURIComponent(attendance)}%0A- Mensaje: ${encodeURIComponent(message)}`;
+            
+            window.open(`https://wa.me/50378776420?text=${text}`, '_blank');
+
+            document.getElementById('rsvp-form').classList.add('hidden');
+            document.getElementById('rsvp-success').classList.remove('hidden');
+        }
+
+        // Particles
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const particleCount = 25;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Petal {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -20;
+                this.size = Math.random() * 8 + 6;
+                this.speedY = Math.random() * 1.2 + 0.6;
+                this.speedX = Math.random() * 0.8 - 0.4;
+                this.angle = Math.random() * 360;
+                this.spin = Math.random() * 2 - 1;
+                const colors = ['rgba(226, 195, 255, 0.7)', 'rgba(201, 137, 221, 0.6)', 'rgba(248, 248, 172, 0.7)', 'rgba(245, 230, 211, 0.8)'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.angle += this.spin;
+
+                if (this.y > canvas.height + 20) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.angle * Math.PI) / 180);
+                ctx.fillStyle = this.color;
+                
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.quadraticCurveTo(this.size, -this.size, this.size, 0);
+                ctx.quadraticCurveTo(this.size, this.size, 0, 0);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Petal());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.onload = function() {
+            animateParticles();
+        };
+    </script>
+</body>
+</html>
+
+
